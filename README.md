@@ -131,7 +131,38 @@ sum(rowMeans(normalized_ratings))
 *    **Data binarization**
 We will use binarize() to transform into a 0-1 matrix. It divides data into two groups, then assign one of two values to all members of the same group. One has to define a threshold: the value 0 will be assigned to all data points below, and 1 to those above it.
 
+```
+final_data <- binarize(movie_ratings, minRating = 3)
+```
 
+*    **Separation in test and training data **
+This final_data will be used to construct the recommender. First, we split the data in trainig and testing sets ( we set seed for this is a random process):
+
+```
+set.seed(1234)
+
+sampled_data<- sample(x = c(TRUE, FALSE),
+                      size = nrow(final_data),
+                      replace = TRUE,
+                      prob = c(0.8, 0.2))
+training_data <- final_data[sampled_data, ]
+testing_data <- final_data[!sampled_data, ]
+```
+
+## 3. CREATING A RECOMMENDER
+
+This project implements the Item Based Collaborative Filtering model:
+
+```
+recommender_collab <-  Recommender(data = training_data,method = "IBCF")
+
+```
+ We also will use the method "POPULAR", where the recommendations are based  on the number of users who have the item in their profile:
+ 
+ ```
+ recommender_popular <- Recommender(data = training_data, method = "POPULAR")
+ 
+ ```
 
 
 
